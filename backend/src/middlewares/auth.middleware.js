@@ -1,9 +1,19 @@
 import jwt from "jsonwebtoken";
+import tokenBlacklistModel from "../models/blacklist.model.js"
 
 export const authUser=async(req,res,next)=>{
     const token=req.cookies.token;
     if(!token){
         return res.status(401).json({message:"token not provided"});
+    }
+
+    const isTokenBlacklisted = await tokenBlacklistModel.findOne({
+        token
+    })
+    if (isTokenBlacklisted) {
+        return res.status(401).json({
+            message: "token is invalid"
+        })
     }
 
     try{
