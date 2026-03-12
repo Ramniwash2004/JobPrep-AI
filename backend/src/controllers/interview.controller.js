@@ -1,32 +1,39 @@
 import InterviewReport from "../models/interviewReport.model.js";
 import generateInterviewReport from "../services/ai.service.js";
-import pdfParse from "pdf-parse";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const pdfParse = require("pdf-parse");
 
 export const generateInterViewReportController = async (req, res) => {
   try {
-
-    if (!req.file) {
+    // const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText();
+    const resumeContent=await pdfParse(req.file.buffer);
+    if (!resumeContent) {
       return res.status(400).json({
         message: "Resume file required"
       });
     }
+    console.log("RESUME TEXT:", resumeContent.text.slice(0,500));
 
     const { selfDescription, jobDescription } = req.body;
 
-    const pdfData = await pdfParse(req.file.buffer);
+    // const pdfData = await pdfParse(req.file.buffer);
 
     const interViewReportByAi = await generateInterviewReport({
-      resume: pdfData.text,
+      resume: resumeContent.text,
       selfDescription,
       jobDescription
     });
 
+    // console.log("AI RESPONSE:", interViewReportByAi);
+
     const interviewReport = await InterviewReport.create({
-      user: req.user.id,
-      resume: pdfData.text,
-      selfDescription,
-      jobDescription,
-      ...interViewReportByAi
+        user: req.user.id,
+        resume: resumeContent.text,
+        selfDescription,
+        jobDescription,
+        ...interViewReportByAi
     });
 
     res.status(201).json({

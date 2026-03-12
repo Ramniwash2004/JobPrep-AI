@@ -35,13 +35,60 @@ const interviewReportSchema = z.object({
     title: z.string().describe("The title of the job for which the interview report is generated"),
 })
 
+// async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
+
+//     const prompt = `
+//         You are an expert technical interviewer.
+        
+//         Analyze the candidate profile and generate a detailed interview preparation report.
+
+//         Resume:
+//         ${resume}
+
+//         Self Description:
+//         ${selfDescription}
+
+//         Job Description:
+//         ${jobDescription}
+
+//         Generate:
+//         - matchScore (0-100)
+//         - technical interview questions with intention and answer strategy
+//         - behavioral interview questions with intention and answer strategy
+//         - skill gaps with severity
+//         - a day-wise preparation plan
+//         - job title
+
+//         Return ONLY valid JSON.
+//         `;
+
+//     const response = await ai.models.generateContent({
+//         model: "gemini-3-flash-preview",
+//         contents: prompt,
+//         config: {
+//             responseMimeType: "application/json",
+//             responseJsonSchema: zodToJsonSchema(interviewReportSchema),
+//         },
+//     });
+//     return JSON.parse(response.text())
+// }
+
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
-    const prompt = `Generate an interview report for a candidate with the following details:
-        Resume: ${resume}
-        Self Description: ${selfDescription}
-        Job Description: ${jobDescription}
-    `
+    const prompt = `
+Generate an interview report for a candidate.
+
+Resume:
+${resume.slice(0,6000)}
+
+Self Description:
+${selfDescription}
+
+Job Description:
+${jobDescription}
+
+Return valid JSON.
+`;
 
     const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -51,7 +98,10 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
             responseJsonSchema: zodToJsonSchema(interviewReportSchema),
         },
     });
-    return JSON.parse(response.text)
+
+    const text = response.candidates[0].content.parts[0].text;
+
+    return JSON.parse(text);
 }
 
 export default generateInterviewReport;
