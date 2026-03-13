@@ -75,8 +75,24 @@ const interviewReportSchema = z.object({
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
+    // const prompt = `
+    //     Generate an interview report for a candidate.
+
+    //     Resume:
+    //     ${resume.slice(0,6000)}
+
+    //     Self Description:
+    //     ${selfDescription}
+
+    //     Job Description:
+    //     ${jobDescription}
+
+    //     Return valid JSON.
+    // `;
     const prompt = `
-Generate an interview report for a candidate.
+You are an expert technical interviewer.
+
+Analyze the candidate profile and generate an interview preparation report.
 
 Resume:
 ${resume.slice(0,6000)}
@@ -87,7 +103,43 @@ ${selfDescription}
 Job Description:
 ${jobDescription}
 
-Return valid JSON.
+Return ONLY valid JSON with EXACTLY these fields:
+
+{
+ "matchScore": number between 0 and 100,
+ "technicalQuestions": [
+   {
+     "question": string,
+     "intention": string,
+     "answer": string
+   }
+ ],
+ "behavioralQuestions": [
+   {
+     "question": string,
+     "intention": string,
+     "answer": string
+   }
+ ],
+ "skillGaps": [
+   {
+     "skill": string,
+     "severity": "low" | "medium" | "high"
+   }
+ ],
+ "preparationPlan": [
+   {
+     "day": number,
+     "focus": string,
+     "tasks": [string]
+   }
+ ],
+ "title": string
+}
+
+Do not return any other fields.
+Do not return explanation.
+Only return JSON.
 `;
 
     const response = await ai.models.generateContent({
@@ -95,13 +147,41 @@ Return valid JSON.
         contents: prompt,
         config: {
             responseMimeType: "application/json",
-            responseJsonSchema: zodToJsonSchema(interviewReportSchema),
+            responseSchema: zodToJsonSchema(interviewReportSchema),
         },
     });
+    // console.log("interie questions",zodToJsonSchema(interviewReportSchema))
+    // const text = response.candidates[0]?.content?.parts[0]?.text;
+    // console.log("response",response.candidates[0].content.parts);
+    // const recipe = interviewReportSchema.parse(JSON.parse(text));
+//     const text = response.candidates[0]?.content.parts[0]?.text;
 
-    const text = response.candidates[0].content.parts[0].text;
+// const json = JSON.parse(text);
 
-    return JSON.parse(text);
+// const recipe = interviewReportSchema.parse(json);
+// console.log("recipe",recipe)
+
+// return recipe;
+const text = response.candidates?.[0]?.content?.parts?.[0]?.text;
+
+if (!text) {
+    console.error("Invalid AI response:", response);
+    throw new Error("AI did not return text");
 }
+
+console.log("AI RAW RESPONSE:", text);
+
+const json = JSON.parse(text);
+
+const result = interviewReportSchema.safeParse(json);
+
+if (!result.success) {
+    console.error("ZOD ERROR:", result.error);
+    throw new Error("Invalid AI response format");
+}
+
+return result.data;
+}
+
 
 export default generateInterviewReport;

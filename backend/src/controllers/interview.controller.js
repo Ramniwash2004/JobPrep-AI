@@ -14,7 +14,6 @@ export const generateInterViewReportController = async (req, res) => {
         message: "Resume file required"
       });
     }
-    console.log("RESUME TEXT:", resumeContent.text.slice(0,500));
 
     const { selfDescription, jobDescription } = req.body;
 
@@ -23,10 +22,11 @@ export const generateInterViewReportController = async (req, res) => {
     const interViewReportByAi = await generateInterviewReport({
       resume: resumeContent.text,
       selfDescription,
+      
       jobDescription
     });
 
-    // console.log("AI RESPONSE:", interViewReportByAi);
+    console.log("AI RESPONSE:", interViewReportByAi);
 
     const interviewReport = await InterviewReport.create({
         user: req.user.id,
