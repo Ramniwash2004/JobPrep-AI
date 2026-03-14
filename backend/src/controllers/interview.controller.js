@@ -22,7 +22,6 @@ export const generateInterViewReportController = async (req, res) => {
     const interViewReportByAi = await generateInterviewReport({
       resume: resumeContent.text,
       selfDescription,
-      
       jobDescription
     });
 
