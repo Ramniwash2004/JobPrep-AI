@@ -1,9 +1,132 @@
-import React from 'react'
+import React from "react";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  // if (loading) {
+  //   return (
+  //     <main className="loading-screen">
+  //       <h1>Loading your interview plan...</h1>
+  //     </main>
+  //   );
+  // }
 
-export default Home
+  return (
+    <div>
+      {/* Page Header */}
+      <header className="page-header">
+        <h1>
+          Create Your Custom <span className="highlight">Interview Plan</span>
+        </h1>
+        <p>
+          Let our AI analyze the job requirements and your unique profile to
+          build a winning strategy.
+        </p>
+      </header>
+
+      {/* main card */}
+      <div  className='interview-card'>
+        <div className='interview-card__body'>
+
+          {/* Left panel - job description */}
+          <div className="panel panel--left">
+            <div className="panel__header">
+              <span className="panel__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+              </span>
+              <h2>Target Job Description</h2>
+              <span className="badge badge--required">Required</span>
+            </div>
+            <textarea
+              // onChange={(e) => {
+              //   setJobDescription(e.target.value);
+              // }}
+              className="panel__textarea"
+              placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
+              maxLength={5000}
+            />
+            <div className="char-counter">0 / 5000 chars</div>
+          </div>
+
+          {/* vertical divider */}
+          <div className="panel-divider" />
+
+          {/* right panel profile */}
+          <div className="panel panel--right">
+            <div className="panel__header">
+              <span className="panel__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
+              <h2>Your Profile</h2>
+            </div>
+
+            {/* Upload Resume */}
+            <div className="upload-section">
+              <label className="section-label">
+                Upload Resume
+                <span className="badge badge--best">Best Results</span>
+              </label>
+              <label className="dropzone" htmlFor="resume">
+                <span className="dropzone__icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="16 16 12 12 8 16" />
+                    <line x1="12" y1="12" x2="12" y2="21" />
+                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                  </svg>
+                </span>
+                <p className="dropzone__title">
+                  Click to upload or drag &amp; drop
+                </p>
+                <p className="dropzone__subtitle">PDF or DOCX (Max 5MB)</p>
+                <input
+                  // ref={resumeInputRef}
+                  hidden
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  accept=".pdf,.docx"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
