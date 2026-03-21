@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // ── Variables ────────────────────────────────────────────────────────────────
 $bg-page:        #0d1117;
 $bg-card:        #161b22;
@@ -58,6 +60,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 .interview-card {
     width: 100%;
     max-width: 900px;
+    margin: auto;
     background-color: $bg-card;
     border: 1px solid $border-color;
     border-radius: 1rem;
@@ -296,12 +299,39 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 }
 
 // ── Generate Button ───────────────────────────────────────────────────────────
+// .generate-btn {
+//     display: flex;
+//     align-items: center;
+//     gap: 0.5rem;
+//     padding: 0.75rem 1.5rem;
+//     background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
+//     color: #fff;
+//     font-size: 0.9rem;
+//     font-weight: 600;
+//     border: none;
+//     border-radius: 0.5rem;
+//     cursor: pointer;
+//     transition: opacity 0.2s, transform 0.1s;
+//     font-family: $font-stack;
+
+//     &:hover {
+//         opacity: 0.9;
+//     }
+
+//     &:active {
+//         transform: scale(0.98);
+//     }
+// }
 .generate-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
+    background: linear-gradient(
+        135deg,
+        $accent 0%,
+        color.adjust($accent, $lightness: -10%) 100%
+    );
     color: #fff;
     font-size: 0.9rem;
     font-weight: 600;
@@ -310,14 +340,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
     font-family: $font-stack;
-
-    &:hover {
-        opacity: 0.9;
-    }
-
-    &:active {
-        transform: scale(0.98);
-    }
 }
 
 .recent-reports{
@@ -359,6 +381,8 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 .page-footer {
     display: flex;
     gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
 
     a {
         font-size: 0.8rem;
